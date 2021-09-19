@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback, useMemo, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import useRouter from "use-react-router";
 
@@ -9,6 +9,13 @@ import TodoItem from "./TodoItem";
 
 export default function TodoList() {
   const router = useRouter();
+
+  const doneColorSet = []
+  doneColorSet[1] = 'done-last';
+  doneColorSet[2] = 'done-second';
+  doneColorSet[3] = 'done-third';
+
+  const [completedToDoColor, setCompletedToDoColor] = useState([]); //list of last,2nd last and 3rd last completed 'todo' colors
 
   const [todos, { addTodo, deleteTodo, setDone }] = useTodos();
 
@@ -30,6 +37,20 @@ export default function TodoList() {
   const allSelected = useMemo(() => visibleTodos.every(i => i.done), [
     visibleTodos
   ]);
+
+  useEffect(() => {
+    let sortedDoneToDos = [...todos];
+    let doneColor = [];
+
+    sortedDoneToDos = sortedDoneToDos.filter((a) => a.completedOn !== null) // removing non-completed todos
+    sortedDoneToDos.sort((a,b) => new Date(b.completedOn) - new Date(a.completedOn)); // sorting in descending order them by date on which they are completed
+    sortedDoneToDos = sortedDoneToDos.splice(0,3); // taking first 3 completed tasks
+
+    sortedDoneToDos.map((ele,index) => (
+      doneColor[ele.id] = doneColorSet[index + 1] //setting it's color
+    ))
+    setCompletedToDoColor(doneColor);
+  },[todos])
 
   const onToggleAll = useCallback(
     () => {
@@ -83,8 +104,16 @@ export default function TodoList() {
         />
         <label htmlFor="toggle-all" />
         <ul className="todo-list">
+        {(visibleTodos.length > 0) &&
+          <ul className='todo-header'>
+            <li>&nbsp;</li>
+            <li>Task</li>
+            <li>Added On</li>
+            <li>Completed On</li>
+          </ul>
+        }
           {visibleTodos.map(todo => (
-            <TodoItem key={todo.id} todo={todo} />
+            <TodoItem key={todo.id} todo={todo} doneColor={(completedToDoColor && completedToDoColor[todo.id]) ? completedToDoColor[todo.id] : null}/>
           ))}
         </ul>
       </section>

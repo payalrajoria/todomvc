@@ -1,0 +1,29 @@
+.done-last {
+    list-style: none;
+    -webkit-column-count: 3;
+    color: #00B050;
+}
+
+.done-second {
+    list-style: none;
+    -webkit-column-count: 3;
+    color: #B2189C;
+}
+
+.done-third {
+    list-style: none;
+    -webkit-column-count: 3;
+    color: #FFC000;
+}
+
+.done-default {
+    list-style: none;
+    -webkit-column-count: 3;       
+}
+
+.todo-header {
+    list-style: none;
+    -webkit-column-count: 4;   
+    font-weight: bold;   
+    padding: 0px;
+}

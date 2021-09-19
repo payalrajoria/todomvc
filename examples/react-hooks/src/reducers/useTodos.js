@@ -5,7 +5,9 @@ import { guid } from "../utils";
 export const newTodo = label => ({
   done: false,
   id: guid(),
-  label: (label || "").trim()
+  label: (label || "").trim(),
+  addedOn: new Date(), // added two attributes/properties to 'todo'
+  completedOn: null     // to show when 'todo' is added and completed on
 });
 
 export const reducer = {
@@ -21,7 +23,8 @@ export const reducer = {
       i.id === id
         ? {
             ...i,
-            done
+            done,
+            completedOn: (done) ? new Date() : null
           }
         : i
     ),
@@ -43,7 +46,8 @@ export const reducer = {
       i.id === id
         ? {
             ...i,
-            done: !i.done
+            done: !i.done,
+            completedOn: (!i.done) ? new Date() : null
           }
         : i
     )
